@@ -1,11 +1,15 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RunLengthEncoding {
-	public String packer(String text) {
+	public static String packer(String text) {
 		StringBuilder str = new StringBuilder();
 		for(int i = 0 ; i<text.length(); i++) {
 			StringBuilder digits = new StringBuilder();
@@ -22,9 +26,13 @@ public class RunLengthEncoding {
 							digits.deleteCharAt(digits.toString().length()-1);
 							str.append(digits);
 							str.append("-");
-							digits.delete(0,digits.toString().length()-1 );
+							digits.delete(0,digits.toString().length());
 							i--;
 						}
+				}
+				if (!digits.toString().isEmpty()) {//проверка случа€, когда цифры €вл€ютс€ последними символами в строке
+					str.append(digits);
+					str.append("-");
 				}
 			}
 			catch (NumberFormatException e ) {
@@ -50,7 +58,7 @@ public class RunLengthEncoding {
 	}
 		return str.toString();
 }
-	public String unpacker(String text) {
+	public static String unpacker(String text) {
 		StringBuilder str = new StringBuilder();
 			Pattern pattern = Pattern.compile("[0-9]+|\\D+"); // число повторений или буква/последовательность букв
 		    Matcher matcher = pattern.matcher(text);
@@ -70,6 +78,25 @@ public class RunLengthEncoding {
 		return str.toString();
 
 }
-	
+	 public static void main(String[] args) {
+		 try {
+			 File file = new File("rle.txt");
+			 if(!file.exists()) {
+				 file.createNewFile();
+			 }
+			 PrintWriter pw = new PrintWriter(file);
+			 pw.println("12bbbb23ffff");
+			 pw.close();
+			 BufferedReader br = null;
+			 br = new BufferedReader(new FileReader("rle.txt"));
+			 String line;
+			 while((line = br.readLine()) != null) {
+				 System.out.println(unpacker(packer(line)));
+			 }
+			 br.close();
+		 } catch(IOException e) {
+			 System.out.println(e);
+		 } 
+	 }
 }
 
