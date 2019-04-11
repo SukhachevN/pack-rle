@@ -15,6 +15,12 @@ class Test {
 		assertEquals("22adcbbAAAAA" , rle.unpacker("22-1adc2b5A"));
 		assertEquals("adc  dd" , rle.unpacker("1adc2 2d"));
 	}
+	@org.junit.jupiter.api.Test
+	void main() {
+		assertEquals( true, rle.main("z" , "rleOut.txt" , "rle.txt"));
+		assertEquals( true, rle.main("u" , "rle12.txt" , "rleOut.txt"));
+		
+	}
 
 
 }

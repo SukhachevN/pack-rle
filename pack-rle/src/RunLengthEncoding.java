@@ -78,25 +78,32 @@ public class RunLengthEncoding {
 		return str.toString();
 
 }
-	 public static void main(String[] args) {
+	 public static boolean main(String arg, String out , String in) {
 		 try {
-			 File file = new File("rle.txt");
-			 if(!file.exists()) {
-				 file.createNewFile();
+			 File input = new File(in);
+			 File output = new File(out);
+			 if(!output.exists()) {
+				 output.createNewFile();
 			 }
-			 PrintWriter pw = new PrintWriter(file);
-			 pw.println("12bbbb23ffff");
-			 pw.close();
+			 PrintWriter pw = new PrintWriter(output);
 			 BufferedReader br = null;
-			 br = new BufferedReader(new FileReader("rle.txt"));
+			 br = new BufferedReader(new FileReader(input));
 			 String line;
 			 while((line = br.readLine()) != null) {
-				 System.out.println(unpacker(packer(line)));
+				 if (arg == "z") {
+					 pw.println(packer(line));
+				 }
+				 if(arg == "u") {
+					 pw.println(unpacker(line));
+				 }
 			 }
+			 pw.close();
 			 br.close();
+			 return true;
 		 } catch(IOException e) {
 			 System.out.println(e);
-		 } 
+		 }
+		return false; 
 	 }
 }
 
