@@ -1,8 +1,12 @@
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+
 
 class Test {
 	private RunLengthEncoding rle = new RunLengthEncoding();
+	File output1 = new File("rleOut.txt");
+	File output2 = new File("rle12.txt");
 
 	@org.junit.jupiter.api.Test
 	void packer() {
@@ -17,9 +21,8 @@ class Test {
 	}
 	@org.junit.jupiter.api.Test
 	void main() {
-		assertEquals( true, rle.main("z" , "rleOut.txt" , "rle.txt"));
-		assertEquals( true, rle.main("u" , "rle12.txt" , "rleOut.txt"));
-		
+		assertEquals( output1, rle.coder("-z" , "rleOut.txt" , "rle.txt"));
+		assertEquals( output2, rle.coder("-u" , "rle12.txt" , "rleOut.txt"));
 	}
 
 

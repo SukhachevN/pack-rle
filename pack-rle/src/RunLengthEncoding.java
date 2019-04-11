@@ -63,7 +63,6 @@ public class RunLengthEncoding {
 			Pattern pattern = Pattern.compile("[0-9]+|\\D+"); // число повторений или буква/последовательность букв
 		    Matcher matcher = pattern.matcher(text);
 		    while (matcher.find()) {
-		    	
 	            int number = Integer.parseInt(matcher.group());
 	            matcher.find();
 	            if (matcher.group().equals("-")) {
@@ -78,10 +77,10 @@ public class RunLengthEncoding {
 		return str.toString();
 
 }
-	 public static boolean main(String arg, String out , String in) {
+	 public static File coder(String arg, String out , String in) {
+		 File input = new File(in);
+		 File output = new File(out);
 		 try {
-			 File input = new File(in);
-			 File output = new File(out);
 			 if(!output.exists()) {
 				 output.createNewFile();
 			 }
@@ -90,20 +89,27 @@ public class RunLengthEncoding {
 			 br = new BufferedReader(new FileReader(input));
 			 String line;
 			 while((line = br.readLine()) != null) {
-				 if (arg == "z") {
+				 System.out.println(line);
+				 if (arg.equals("-z")) {
 					 pw.println(packer(line));
+					 System.out.println(packer(line));
 				 }
-				 if(arg == "u") {
-					 pw.println(unpacker(line));
+				 else {
+					 if(arg.equals("-u")) {
+						 pw.println(unpacker(line));
+						 System.out.println(unpacker(line));
+					 }
+					 else {
+						 System.out.println("error");
+					 }
 				 }
 			 }
 			 pw.close();
 			 br.close();
-			 return true;
 		 } catch(IOException e) {
 			 System.out.println(e);
 		 }
-		return false; 
+		 return output;
 	 }
 }
 
