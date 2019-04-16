@@ -89,11 +89,36 @@ public class RunLengthEncoding {
 					str.append("-");
 				}
 			} else {
-				if (matcher.group().charAt(0)==('-')) {
-					str.append(number);
-					str.append(matcher.group().substring(1));
+				if(matcher.group().length() == 1) {
+					if (matcher.group().charAt(0)==('+') && number == 0) {
+						str.append("-");
+					}
+					else
+					while ((number--) != 0) {
+						str.append(matcher.group());
+					}
 				}
 				else
+				if (matcher.group().charAt(0)==('-')) {
+					if ((matcher.group().charAt(1)!=('-'))) {
+						str.append(number);
+					str.append(matcher.group().substring(1));
+					}
+					else {
+						while((number--) != 0) {
+							str.append("-");
+						}
+						str.append(matcher.group().substring(2));
+					}
+				}
+				else
+					if ((matcher.group().charAt(1)==('-'))) {
+						while((number--) != 0) {
+							str.append("-");
+						}
+					}
+						
+					else
 				if (matcher.group().charAt(0)==('+') && number == 0) {
 					str.append("-");
 					str.append(matcher.group().substring(1));

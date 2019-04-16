@@ -14,7 +14,7 @@ class Test {
 		assertEquals("a4 2b" , rle.packer("a    bb"));
 		assertEquals("abcd2e" , rle.packer("abcdee"));
 		assertEquals("abcde4-0+2-c1-" , rle.packer("abcde4-2c1"));
-		assertEquals("4--" , rle.packer("----"));
+		assertEquals("4--abc" , rle.packer("----abc"));
 		assertEquals("0-3--0-+" , rle.packer("0---0+"));
 		assertEquals("3Cbob" , rle.packer("CCCbob"));
 	}
@@ -27,6 +27,7 @@ class Test {
 		assertEquals("----2-" , rle.unpacker("4--2-0+"));
 		assertEquals("0---0+" , rle.unpacker("0-3--0-+"));
 		assertEquals("CCCbob" , rle.unpacker("3Cbob"));
+		assertEquals("----abc" , rle.unpacker("4--abc"));
 	}
 	@org.junit.jupiter.api.Test
 	void main() {
