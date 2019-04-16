@@ -8,5 +8,11 @@
 размера файла.
 
 Command Line: pack-rle [-z|-u] [-out outputname.txt] inputname.txt
-Для проверки -z -out rleOut.txt rle.txt
--u -out rle12.txt rleOut.txt
+Для проверки -z rle.txt -out rleOut.txt 
+-u rleOut.txt -out rle12.txt 
+Объяснение кодирования:
+aaabbbccc -> 3a3b3c
+abcd -> abcd
+3Fbcr -> FFFbcr
+- -> 0+ , НО --- -> 3-- 
+325 -> 325-

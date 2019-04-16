@@ -1,25 +1,24 @@
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Main {
 	public static void main(String[] args) {
-		String arg;
-		String out;
-		String in;
-		Scanner sc = new Scanner(System.in);
+		String arg = "noArg";
+		String out = "noOut";
+		String in = null;
 		RunLengthEncoding rle = new RunLengthEncoding();
-		String str = sc.nextLine();
-		Pattern pattern = Pattern.compile("\\S+"); 
-	    Matcher matcher = pattern.matcher(str);
-	    while (matcher.find()) {
-	    	arg = matcher.group();
-	    	matcher.find();
-	    	matcher.find();
-	    	out = matcher.group();
-	    	matcher.find();
-	    	in = matcher.group();
-	    rle.coder(arg, out, in);
-	    }
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("-u") || args[i].equals("-z") ) {
+				arg = args[i];
+				i++;
+				in = args[i];
+			}
+			if (args[i].equals("-out")) {
+				i++;
+				out = args[i];
+			}
+		}
+		if(out.equals("noOut")) {
+			out="out"+in;
+		}
+		if(!arg.equals("noArg"))
+		rle.coder(arg, out, in);
 	}
 }
