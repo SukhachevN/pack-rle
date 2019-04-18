@@ -38,12 +38,10 @@ public class RunLengthEncoding {
 						if (i == text.length() - 1) {
 							singleLetters.append(text.charAt(i));
 						}
-						
 						str.append(singleLetters);
 					}
 				} else {
 					if (i == text.length() - 1) {
-						
 						str.append(text.charAt(i));
 					}
 				}
@@ -72,7 +70,7 @@ public class RunLengthEncoding {
 		while (matcher.find()) {
 			int number = -1;
 			try {
-				 number = Integer.parseInt(matcher.group());
+				number = Integer.parseInt(matcher.group());
 			} catch (NumberFormatException e) {
 				str.append(matcher.group());
 			}
@@ -80,62 +78,72 @@ public class RunLengthEncoding {
 				matcher.find();
 				number = Integer.parseInt(matcher.group());
 			}
+			if (matcher.group().charAt(0) == '0' && matcher.group().length() > 1) {
+				int k = 0;
+				while ((matcher.group().charAt(k)) == '0') { 
+					if (k + 1 < matcher.group().length()) {
+						k++;
+						str.append(0);
+					} else {
+						break;
+					}
+				}
+			}
 			matcher.find();
 			if (matcher.group().equals("-")) {
 				str.append(number);
 			} else {
 				if (matcher.group().equals("--")) {
-				while ((number--) != 0) {
-					str.append("-");
-				}
-			} else {
-				if(matcher.group().length() == 1) {
-					if (matcher.group().charAt(0)==('+') && number == 0) {
+					while ((number--) != 0) {
 						str.append("-");
 					}
-					else
-					while ((number--) != 0) {
-						str.append(matcher.group());
-					}
-				}
-				else
-				if (matcher.group().charAt(0)==('-')) {
-					if ((matcher.group().charAt(1)!=('-'))) {
-						str.append(number);
-					str.append(matcher.group().substring(1));
-					}
-					else {
-						while((number--) != 0) {
+				} else {
+					if (matcher.group().length() == 1) {
+						if (matcher.group().charAt(0) == ('+') && number == 0) {
 							str.append("-");
+						} else {
+							while ((number--) != 0) {
+								str.append(matcher.group());
+							}
 						}
-						str.append(matcher.group().substring(2));
-					}
-				}
-				else
-					if ((matcher.group().charAt(1)==('-'))) {
-						while((number--) != 0) {
-							str.append("-");
+					} else { 
+						if (matcher.group().charAt(0) == ('-')) {
+							if ((matcher.group().charAt(1) != ('-'))) {
+								str.append(number);
+								str.append(matcher.group().substring(1));
+							} else {
+								while ((number--) != 0) {
+									str.append("-");
+								}
+								str.append(matcher.group().substring(2));
+							}
+						} else {
+							if ((matcher.group().charAt(1) == ('-'))) {
+								while ((number--) != 0) {
+									str.append("-");
+								}
+							}
+							else {
+								if (matcher.group().charAt(0) == ('+') && number == 0) {
+									str.append("-");
+									str.append(matcher.group().substring(1));
+								} else {
+									if (matcher.group().length() > 1) {
+										while ((number--) != 0) {
+											str.append(matcher.group().charAt(0));
+										}
+										str.append(matcher.group().substring(1));
+									} else {
+										while ((number--) != 0) {
+											str.append(matcher.group());
+										}
+									}
+								}
+							}
 						}
-					}
-						
-					else
-				if (matcher.group().charAt(0)==('+') && number == 0) {
-					str.append("-");
-					str.append(matcher.group().substring(1));
-				}
-				else
-					if(matcher.group().length()>1) {
-						while((number--) != 0) {
-							str.append(matcher.group().charAt(0));
-						}
-						str.append(matcher.group().substring(1));
-					}
-					else
-				while ((number--) != 0) {
-					str.append(matcher.group());
+				    }
 				}
 			}
-		}
 		}
 		return str.toString();
 
