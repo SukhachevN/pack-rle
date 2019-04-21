@@ -22,6 +22,7 @@ class Test {
 	
 	@org.junit.jupiter.api.Test
 	void unpacker() {
+		assertEquals("abcd" , rle.unpacker("abcd"));
 		assertEquals("22adcbbAAAAA" , rle.unpacker("22-adc2b5A"));
 		assertEquals("adc  dd" , rle.unpacker("adc2 2d"));
 		assertEquals("abcde4-2c1" , rle.unpacker("abcde4-0+2-c1-"));

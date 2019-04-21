@@ -23,7 +23,7 @@ public class RunLengthEncoding {
 				digits.delete(0, digits.length());
 				str.append("-");
 			} else {
-				if (i + 1 < text.length() && text.charAt(i) != text.charAt(i + 1)) {
+				if (i + 1 < text.length() && text.charAt(i) != text.charAt(i + 1)) { // "-" -> "0+"
 					if (text.charAt(i) == '-') {
 						str.append("0+");
 					} else {
@@ -52,7 +52,7 @@ public class RunLengthEncoding {
 						i++;
 					}
 					str.append(symbolLength);
-					if (text.charAt(i) == '-') {
+					if (text.charAt(i) == '-') { //"---" -> "3--"
 						str.append("--");
 					} else
 						str.append(text.charAt(i));
@@ -65,7 +65,7 @@ public class RunLengthEncoding {
 
 	public static String unpacker(String text) {
 		StringBuilder str = new StringBuilder();
-		Pattern pattern = Pattern.compile("[0-9]+|\\D+"); // число повторений или буква/последовательность букв
+		Pattern pattern = Pattern.compile("[0-9]+|\\D+"); // число повторений или буква/последовательность символов
 		Matcher matcher = pattern.matcher(text);
 		while (matcher.find()) {
 			int number = -1;
@@ -74,11 +74,16 @@ public class RunLengthEncoding {
 			} catch (NumberFormatException e) {
 				str.append(matcher.group());
 			}
-			if (number < 0) {
+			if (number < 0) { //"abcd3F"
 				matcher.find();
-				number = Integer.parseInt(matcher.group());
+				try { //"abc" -> "abc"
+					number = Integer.parseInt(matcher.group());
+				}
+				catch (IllegalStateException e) {
+					return str.toString();
+				}
 			}
-			if (matcher.group().charAt(0) == '0' && matcher.group().length() > 1) {
+			if (matcher.group().charAt(0) == '0' && matcher.group().length() > 1) {//"0002A" -> "000AA")
 				int k = 0;
 				while ((matcher.group().charAt(k)) == '0') { 
 					if (k + 1 < matcher.group().length()) {
@@ -90,55 +95,42 @@ public class RunLengthEncoding {
 				}
 			}
 			matcher.find();
-			if (matcher.group().equals("-")) {
+			if (matcher.group().equals("-")) {//"3-" -> "3"
 				str.append(number);
 			} else {
-				if (matcher.group().equals("--")) {
+				if (matcher.group().equals("--")) {//"3--" -> "---"
 					while ((number--) != 0) {
 						str.append("-");
 					}
 				} else {
 					if (matcher.group().length() == 1) {
-						if (matcher.group().charAt(0) == ('+') && number == 0) {
+						if (matcher.group().charAt(0) == ('+') && number == 0) {//"0+" -> "-"
 							str.append("-");
 						} else {
-							while ((number--) != 0) {
+							while ((number--) != 0) { //"2b" -> "bb"
 								str.append(matcher.group());
 							}
 						}
 					} else { 
 						if (matcher.group().charAt(0) == ('-')) {
-							if ((matcher.group().charAt(1) != ('-'))) {
+							if ((matcher.group().charAt(1) != ('-'))) {// "2-abc" -> "2abc"
 								str.append(number);
 								str.append(matcher.group().substring(1));
 							} else {
-								while ((number--) != 0) {
+								while ((number--) != 0) { //"4--abcd" -> "----abcd"
 									str.append("-");
 								}
 								str.append(matcher.group().substring(2));
 							}
 						} else {
-							if ((matcher.group().charAt(1) == ('-'))) {
-								while ((number--) != 0) {
-									str.append("-");
-								}
-							}
-							else {
-								if (matcher.group().charAt(0) == ('+') && number == 0) {
+								if (matcher.group().charAt(0) == ('+') && number == 0) { // "0+dsa" -> "-dsa"
 									str.append("-");
 									str.append(matcher.group().substring(1));
 								} else {
-									if (matcher.group().length() > 1) {
-										while ((number--) != 0) {
-											str.append(matcher.group().charAt(0));
-										}
-										str.append(matcher.group().substring(1));
-									} else {
-										while ((number--) != 0) {
-											str.append(matcher.group());
-										}
+									while ((number--) != 0) { // "3Abcd" -> "AAAbcd"
+										str.append(matcher.group().charAt(0));
 									}
-								}
+								str.append(matcher.group().substring(1));
 							}
 						}
 				    }
