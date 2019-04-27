@@ -13,7 +13,7 @@ public class Main {
 				out = args[i];
 			}
 		}
-		if(out.equals("noOut")) {
+		if (out.equals("noOut")) {
 			out="out"+in;
 		}
 		if (!arg.equals("noArg") && !in.equals("noIn")) {
