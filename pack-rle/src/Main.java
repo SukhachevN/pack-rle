@@ -3,18 +3,24 @@ public class Main {
 		String arg = "noArg";String out = "noOut";String in = "noIn";
 		RunLengthEncoding rle = new RunLengthEncoding();
 		for (int i = 0; i < args.length; i++) {
-			if (args[i].equals("-u") || args[i].equals("-z") ) {
+			if ("-u".equals(args[i]) || "-z".equals(args[i]) ) {
 				arg = args[i];
-				in = args[i+1];
+				i++;
+				in = args[i];
 			}
 			if (args[i].equals("-out")) {
-				out = args[i+1];
+				i++;
+				out = args[i];
 			}
 		}
 		if(out.equals("noOut")) {
 			out="out"+in;
 		}
-		if(!arg.equals("noArg") && !in.equals("noIn"))
-		rle.coder(arg, out, in);
+		if (!arg.equals("noArg") && !in.equals("noIn")) {
+			rle.coder(arg, out, in);
+		}
+		else {
+			System.out.println("Error");
+		}
 	}
 }

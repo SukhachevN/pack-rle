@@ -1,10 +1,9 @@
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,11 +21,13 @@ public class RunLengthEncoding {
 				str.append(digits);
 				digits.delete(0, digits.length());
 				str.append("-");
-			} else {
+			}
+			else {
 				if (i + 1 < text.length() && text.charAt(i) != text.charAt(i + 1)) { // "-" -> "0+"
 					if (text.charAt(i) == '-') {
 						str.append("0+");
-					} else {
+					}
+					else {
 						StringBuilder singleLetters = new StringBuilder();
 						while (i + 1 < text.length() && (text.charAt(i) != text.charAt(i + 1))) {
 							singleLetters.append(text.charAt(i));
@@ -40,7 +41,8 @@ public class RunLengthEncoding {
 						}
 						str.append(singleLetters);
 					}
-				} else {
+				}
+				else {
 					if (i == text.length() - 1) {
 						str.append(text.charAt(i));
 					}
@@ -65,75 +67,46 @@ public class RunLengthEncoding {
 
 	public static String unpacker(String text) {
 		StringBuilder str = new StringBuilder();
-		Pattern pattern = Pattern.compile("[0-9]+|\\D+"); // число повторений или буква/последовательность символов
+		Pattern pattern = Pattern.compile("(?<special1>[0-9]+\\-{2})|(?<special2>[0-9]+\\-)|(?<special3>0\\+)|(?<digits>[0-9]+)|(?<symbols>\\D+)"); // число повторений или буква/последовательность символов
 		Matcher matcher = pattern.matcher(text);
 		while (matcher.find()) {
-			int number = -1;
-			try {
-				number = Integer.parseInt(matcher.group());
-			} catch (NumberFormatException e) {
-				str.append(matcher.group());
-			}
-			if (number < 0) { //"abcd3F"
-				matcher.find();
-				try { //"abc" -> "abc"
-					number = Integer.parseInt(matcher.group());
-				}
-				catch (IllegalStateException e) {
-					return str.toString();
+			if (matcher.group("special1") != null) {
+				int number = Integer.parseInt(matcher.group("special1").substring(0, (matcher.group()).length()-2));
+				while ((number--) != 0) {
+					str.append("-");
 				}
 			}
-			if (matcher.group().charAt(0) == '0' && matcher.group().length() > 1) {//"0002A" -> "000AA")
-				int k = 0;
-				while ((matcher.group().charAt(k)) == '0') { 
-					if (k + 1 < matcher.group().length()) {
-						k++;
-						str.append(0);
-					} else {
-						break;
-					}
+			else {
+				if (matcher.group("special2") != null) {
+					str.append(matcher.group("special2").substring(0, (matcher.group()).length()-1));
 				}
-			}
-			matcher.find();
-			if (matcher.group().equals("-")) {//"3-" -> "3"
-				str.append(number);
-			} else {
-				if (matcher.group().equals("--")) {//"3--" -> "---"
-					while ((number--) != 0) {
+				else {
+					if (matcher.group("special3") != null) {
 						str.append("-");
 					}
-				} else {
-					if (matcher.group().length() == 1) {
-						if (matcher.group().charAt(0) == ('+') && number == 0) {//"0+" -> "-"
-							str.append("-");
-						} else {
-							while ((number--) != 0) { //"2b" -> "bb"
+					else {
+						if (matcher.group("digits") != null) {
+							int number = Integer.parseInt(matcher.group("digits"));
+							matcher.find();
+							if (matcher.group("symbols").length()==1) {
+								while ((number--) != 0) {
+									str.append(matcher.group("symbols"));
+								}
+							}
+							else {
+								while ((number--) != 0) {
+									str.append(matcher.group().charAt(0));
+								}
+								str.append(matcher.group().substring(1));
+							}
+							
+						}
+						else {
+							if (matcher.group("symbols") != null) {
 								str.append(matcher.group());
 							}
 						}
-					} else { 
-						if (matcher.group().charAt(0) == ('-')) {
-							if ((matcher.group().charAt(1) != ('-'))) {// "2-abc" -> "2abc"
-								str.append(number);
-								str.append(matcher.group().substring(1));
-							} else {
-								while ((number--) != 0) { //"4--abcd" -> "----abcd"
-									str.append("-");
-								}
-								str.append(matcher.group().substring(2));
-							}
-						} else {
-								if (matcher.group().charAt(0) == ('+') && number == 0) { // "0+dsa" -> "-dsa"
-									str.append("-");
-									str.append(matcher.group().substring(1));
-								} else {
-									while ((number--) != 0) { // "3Abcd" -> "AAAbcd"
-										str.append(matcher.group().charAt(0));
-									}
-								str.append(matcher.group().substring(1));
-							}
-						}
-				    }
+					}
 				}
 			}
 		}
@@ -144,32 +117,29 @@ public class RunLengthEncoding {
 	public static File coder(String arg, String out, String in) {
 		File input = new File(in);
 		File output = new File(out);
-		try {
-			if (!output.exists()) {
+		if (output.exists()) {
+			try {
 				output.createNewFile();
+			} catch (IOException e) {
+				System.out.println("Error");
 			}
-			PrintWriter pw = new PrintWriter(output);
-			BufferedReader br = null;
-			br = new BufferedReader(new FileReader(input));
+		}
+		try (PrintWriter pw = new PrintWriter(output);BufferedReader br = new BufferedReader(new FileReader(input));){
 			String line;
 			while ((line = br.readLine()) != null) {
-				System.out.println(line);
 				if (arg.equals("-z")) {
 					pw.println(packer(line));
-					System.out.println(packer(line));
 				} else {
 					if (arg.equals("-u")) {
 						pw.println(unpacker(line));
-						System.out.println(unpacker(line));
 					} else {
 						System.out.println("error");
 					}
 				}
 			}
-			pw.close();
-			br.close();
-		} catch (IOException e) {
-			System.out.println(e);
+		}
+		catch (IOException e) {
+			System.out.println("Error");
 		}
 		return output;
 	}
