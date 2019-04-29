@@ -23,42 +23,42 @@ public class RunLengthEncoding {
 				str.append("-");
 			}
 			else {
-				if (i + 1 < text.length() && text.charAt(i) != text.charAt(i + 1)) { // "-" -> "0+"
-					if (text.charAt(i) == '-') {
-						str.append("0+");
-					}
-					else {
-						StringBuilder singleLetters = new StringBuilder();
-						while (i + 1 < text.length() && (text.charAt(i) != text.charAt(i + 1))) {
-							singleLetters.append(text.charAt(i));
-							if (Character.isDigit(text.charAt(i + 1))) {
-								break;
-							}
-							i++;
-						}
-						if (i == text.length() - 1) {
-							singleLetters.append(text.charAt(i));
-						}
-						str.append(singleLetters);
-					}
+			if (i + 1 < text.length() && text.charAt(i) != text.charAt(i + 1)) { // "-" -> "0+"
+				if (text.charAt(i) == '-') {
+					str.append("0+");
 				}
-				else {
-					if (i == text.length() - 1) {
-						str.append(text.charAt(i));
-					}
+			else {
+				StringBuilder singleLetters = new StringBuilder();
+				while (i + 1 < text.length() && (text.charAt(i) != text.charAt(i + 1))) {
+					singleLetters.append(text.charAt(i));
+			if (Character.isDigit(text.charAt(i + 1))) {
+				break;
+			}
+			i++;
+		}
+			if (i == text.length() - 1) {
+				singleLetters.append(text.charAt(i));
+			}
+			str.append(singleLetters);
+		}
+	}
+			else {
+			if (i == text.length() - 1) {
+				str.append(text.charAt(i));
+			}
+		}
+			if (i + 1 < text.length() && text.charAt(i) == text.charAt(i + 1)) {
+				int symbolLength = 1;
+				while (i + 1 < text.length() && (text.charAt(i) == text.charAt(i + 1))) {
+					symbolLength++;
+					i++;
 				}
-				if (i + 1 < text.length() && text.charAt(i) == text.charAt(i + 1)) {
-					int symbolLength = 1;
-					while (i + 1 < text.length() && (text.charAt(i) == text.charAt(i + 1))) {
-						symbolLength++;
-						i++;
-					}
-					str.append(symbolLength);
-					if (text.charAt(i) == '-') { //"---" -> "3--"
-						str.append("--");
-					} else
-						str.append(text.charAt(i));
-				}
+				str.append(symbolLength);
+			if (text.charAt(i) == '-') { //"---" -> "3--"
+				str.append("--");
+			}
+			else str.append(text.charAt(i));
+		 }
 			}
 		}
 
@@ -77,42 +77,40 @@ public class RunLengthEncoding {
 				}
 			}
 			else {
-				if (matcher.group("special2") != null) {
-					str.append(matcher.group("special2").substring(0, (matcher.group()).length()-1));
-				}
-				else {
-					if (matcher.group("special3") != null) {
-						str.append("-");
-					}
-					else {
-						if (matcher.group("digits") != null) {
-							int number = Integer.parseInt(matcher.group("digits"));
-							matcher.find();
-							if (matcher.group("symbols").length()==1) {
-								while ((number--) != 0) {
-									str.append(matcher.group("symbols"));
-								}
-							}
-							else {
-								while ((number--) != 0) {
-									str.append(matcher.group().charAt(0));
-								}
-								str.append(matcher.group().substring(1));
-							}
-							
-						}
-						else {
-							if (matcher.group("symbols") != null) {
-								str.append(matcher.group());
-							}
-						}
-					}
+			if (matcher.group("special2") != null) {
+				str.append(matcher.group("special2").substring(0, (matcher.group()).length()-1));
+			}
+			else {
+			if (matcher.group("special3") != null) {
+				str.append("-");
+			}
+			else {
+			if (matcher.group("digits") != null) {
+				int number = Integer.parseInt(matcher.group("digits"));
+				matcher.find();
+			if (matcher.group("symbols").length()==1) {
+				while ((number--) != 0) {
+					str.append(matcher.group("symbols"));
 				}
 			}
+			else {
+				while ((number--) != 0) {
+					str.append(matcher.group().charAt(0));
+				}
+				str.append(matcher.group().substring(1));
+			}
 		}
-		return str.toString();
-
+			else {
+			if (matcher.group("symbols") != null) {
+				str.append(matcher.group());
+			}
+		}
 	}
+}
+}
+}
+return str.toString();
+}
 
 	public static File coder(String arg, String out, String in) {
 		File input = new File(in);
@@ -130,17 +128,17 @@ public class RunLengthEncoding {
 				if (arg.equals("-z")) {
 					pw.println(packer(line));
 				} else {
-					if (arg.equals("-u")) {
-						pw.println(unpacker(line));
-					} else {
-						System.out.println("error");
-					}
+				if (arg.equals("-u")) {
+					pw.println(unpacker(line));
+				} else {
+					System.out.println("error");
 				}
 			}
 		}
-		catch (IOException e) {
-			System.out.println("Error");
-		}
-		return output;
 	}
+	catch (IOException e) {
+		System.out.println("Error");
+	}
+	return output;
+}
 }
