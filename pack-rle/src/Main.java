@@ -18,9 +18,6 @@ public class Main {
 		}
 		if (!arg.equals("noArg") && !in.equals("noIn")) {
 			rle.coder(arg, out, in);
-		}
-		else {
-			System.out.println("Error");
-		}
+		}else System.out.println("Error");
 	}
 }
